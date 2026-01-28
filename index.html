@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>RENDERSPACE | Premium Post-Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -11,26 +11,31 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0A0A0A; color: #E0E0E0; margin: 0; overflow: hidden; height: 100dvh; }
+        :root { --nav-height: 75px; --header-height: 65px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0A0A0A; color: #E0E0E0; margin: 0; padding: 0; overflow: hidden; height: 100%; width: 100%; position: fixed; }
         .font-serif { font-family: 'Playfair Display', serif; }
         
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        /* Layout Grids */
+        .app-container { display: grid; height: 100dvh; grid-template-rows: var(--header-height) 1fr var(--nav-height); }
+        @media (min-width: 768px) { .app-container { grid-template-rows: 1fr; grid-template-columns: 280px 1fr; } }
+
+        .content-area { overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .brand-watermark { position: fixed; bottom: -50px; right: -20px; font-size: 15vw; font-weight: 900; color: rgba(255, 255, 255, 0.02); pointer-events: none; z-index: 0; font-family: 'Playfair Display', serif; font-style: italic; }
+        .brand-watermark { position: fixed; bottom: 80px; right: -20px; font-size: 15vw; font-weight: 900; color: rgba(255, 255, 255, 0.02); pointer-events: none; z-index: 0; font-family: 'Playfair Display', serif; font-style: italic; }
         .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #F5E6AD 50%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; gap: 1rem; padding: 1rem 0; width: 100%; scroll-behavior: smooth; }
+        .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; gap: 1rem; padding: 1rem 0; width: 100%; }
         .carousel-container::-webkit-scrollbar { display: none; }
-        .carousel-item { scroll-snap-align: center; flex: 0 0 85%; max-width: 380px; }
-        @media (min-width: 768px) { .carousel-item { flex: 0 0 300px; } }
+        .carousel-item { scroll-snap-align: center; flex: 0 0 85%; max-width: 320px; }
 
-        .progress-bar-bg { height: 2px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-bar-bg { height: 2px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 6px; }
         .progress-bar-fill { height: 100%; background: #D4AF37; transition: width 0.1s linear; }
-        
-        .page-content-wrapper { height: calc(100dvh - 5rem); }
-        @media (min-width: 768px) { .page-content-wrapper { height: 100vh; } }
+
+        .mobile-nav { background: #0F0F0F; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
     </style>
 </head>
 <body>
@@ -39,21 +44,19 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const BrandHeading = ({ className = "" }) => (
-            <div className={`flex flex-col ${className}`}>
-                <div className="text-2xl font-extrabold tracking-tighter text-white leading-none">
-                    RENDER<span className="text-[#D4AF37]">SPACE</span>
-                </div>
-                <div className="text-[10px] tracking-[0.5em] text-gray-500 uppercase mt-1 font-bold pl-0.5">
-                    The Post-Studio
-                </div>
-            </div>
-        );
-
         const Icon = ({ name, size = 20, className = "" }) => {
-            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name, size, className]);
+            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
             return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
         };
+
+        const BrandHeading = () => (
+            <div className="flex flex-col">
+                <div className="text-xl font-extrabold tracking-tighter text-white leading-none">
+                    RENDER<span className="text-[#D4AF37]">SPACE</span>
+                </div>
+                <div className="text-[8px] tracking-[0.4em] text-gray-500 uppercase mt-1 font-bold">The Post-Studio</div>
+            </div>
+        );
 
         const App = () => {
             const [activeTab, setActiveTab] = useState('home');
@@ -67,203 +70,170 @@
             const carouselRef = useRef(null);
 
             const homeSections = [
-                { id: 'who', label: 'Who We Are', text: "A specialized high-performance post-production team serving premium studios globally as a silent backend partner." },
-                { id: 'what', label: 'What We Do', text: "We deliver high-end cinematic edits, editorial retouching, and AI restoration solutions that complete your vision." },
-                { id: 'how', label: 'How We Work', text: "A rigorous 15-day production cycle powered by secure cloud-collaboration to ensure absolute punctuality." }
+                { label: 'Who We Are', text: "A specialized high-performance post-production team serving premium studios globally as a silent backend partner." },
+                { label: 'What We Do', text: "We deliver high-end cinematic edits, editorial retouching, and AI restoration solutions that complete your vision." },
+                { label: 'How We Work', text: "A rigorous 15-day production cycle powered by secure cloud-collaboration to ensure absolute punctuality." }
             ];
 
             const servicesContent = {
-                video: {
-                    title: "Video",
-                    description: "High-end cinematic workflows designed for high-bitrate raw data and complex wedding narratives.",
-                    items: ['Cinematic Teasers', '4K Raw Color Grading', 'Multi-Cam Syncing', 'BGM Curation', 'Documentary Edits', 'Mastering & Export']
-                },
-                photo: {
-                    title: "Photo",
-                    description: "Editorial-grade retouching and sophisticated color science for the modern wedding photographer.",
-                    items: ['Skin Retouching', 'Batch Correction', 'Editorial Grading', 'Culling & Selection', 'Album Spreads', 'High-Res Ready']
-                },
-                ai: {
-                    title: "AI",
-                    description: "Next-gen neural solutions for restoring legacy memories and perfecting contemporary captures.",
-                    items: ['Person Inclusion', 'Legacy Restoration', 'AI Colorization', 'Upscaling (8K)', 'Noise Reduction', 'Neural Cleanup']
-                }
+                video: { title: "Video", desc: "High-end cinematic workflows designed for high-bitrate raw data and complex narratives.", items: ['Teasers', '4K Grading', 'Syncing', 'Curation', 'Documentary', 'Mastering'] },
+                photo: { title: "Photo", desc: "Editorial-grade retouching and sophisticated color science for the modern photographer.", items: ['Retouching', 'Correction', 'Grading', 'Culling', 'Album Spreads', 'Hi-Res'] },
+                ai: { title: "AI", desc: "Next-gen neural solutions for restoring legacy memories and perfecting contemporary captures.", items: ['Inclusion', 'Restoration', 'Colorize', 'Upscale', 'De-noise', 'Cleanup'] }
+            };
+
+            const pricingData = {
+                video: [
+                    { name: "Starter", price: "25k", features: ["Essential Sync", "Highlight", "Color", "1 Rev"] },
+                    { name: "Growth", price: "55k", popular: true, features: ["Storytelling", "Reels", "Adv Grading", "2 Rev"] },
+                    { name: "Scale", price: "99k", features: ["Full Event", "Doc Edit", "Premium Grading", "Ded Editor"] },
+                    { name: "Enterprise", price: "1.8L", features: ["Studio Team", "Pipeline", "24/7 Support", "HD Mgmt"] }
+                ],
+                photo: [
+                    { name: "Essential", price: "8k", features: ["Correction", "Design", "Standard"] },
+                    { name: "Premium", price: "25k", popular: true, features: ["Retouching", "Album", "3 frames"] },
+                    { name: "Luxury", price: "45k", features: ["Skin Work", "Custom", "Wall Set"] }
+                ],
+                ai: [
+                    { name: "Inclusion", price: "8k", features: ["Lighting", "Alignment", "High-res"] },
+                    { name: "Memory", price: "35k", popular: true, features: ["Photo2Video", "Cinematic", "License"] }
+                ]
             };
 
             useEffect(() => {
-                if (activeTab === 'pricing' && carouselRef.current) {
-                    carouselRef.current.scrollTo({ left: 0, behavior: 'auto' });
-                }
+                if (activeTab === 'pricing' && carouselRef.current) carouselRef.current.scrollLeft = 0;
             }, [activeTab, pricingCategory]);
 
             useEffect(() => {
                 if (activeTab !== 'home') return;
-                const duration = 5000;
-                const interval = 50; 
-                let elapsed = 0;
                 const timer = setInterval(() => {
-                    elapsed += interval;
-                    const newProgress = (elapsed / duration) * 100;
-                    if (newProgress >= 100) {
-                        setHomeIdx((prev) => (prev + 1) % homeSections.length);
-                        setProgress(0);
-                        elapsed = 0;
-                    } else {
-                        setProgress(newProgress);
-                    }
-                }, interval);
+                    setProgress(p => {
+                        if (p >= 100) { setHomeIdx(prev => (prev + 1) % homeSections.length); return 0; }
+                        return p + 1.2;
+                    });
+                }, 50);
                 return () => clearInterval(timer);
             }, [activeTab, homeIdx]);
 
-            const pricingData = {
-                video: [
-                    { name: "Starter", price: "25k", features: ["Essential Sync", "Cinematic Highlight", "Color Correction", "1 Revision"] },
-                    { name: "Growth", price: "55k", popular: true, features: ["Storytelling", "Reel creation", "Advanced Grading", "2 Revisions"] },
-                    { name: "Scale", price: "99k", features: ["Full Event Sync", "Documentary Edit", "Premium Grading", "Dedicated Editor"] },
-                    { name: "Enterprise", price: "1.8L", features: ["Studio Dedicated Team", "Full Post-Pipeline", "24/7 Support", "Hard drive management"] }
-                ],
-                photo: [
-                    { name: "Essential", price: "8k", features: ["Corrections", "Album design", "Standard finish"] },
-                    { name: "Premium", price: "25k", popular: true, features: ["Retouching", "Wedding album", "3 frames"] },
-                    { name: "Luxury", price: "45k", features: ["Skin work", "Custom album", "Wall portrait set"] }
-                ],
-                ai: [
-                    { name: "Inclusion", price: "8k", features: ["Natural lighting", "Alignment", "High-res output"] },
-                    { name: "Memory Film", price: "35k", popular: true, features: ["Photo-to-video", "Cinematic treatment", "Music licensing"] }
-                ]
-            };
-
-            const ALL_SERVICES = ['Video Post', 'Cinematic Reels', 'Retouching', 'Album Design', 'Printing', 'AI Restoration'];
-
             const sendWhatsApp = () => {
-                const interestsStr = formData.interests.join(', ') || "Inquiry";
-                const message = `Hello Renderspace! %0A%0A*Studio:* ${formData.studioName}%0A*Package:* ${formData.directPackage}%0A*Services:* ${interestsStr}`;
+                const message = `Hello Renderspace! %0A%0A*Studio:* ${formData.studioName}%0A*Package:* ${formData.directPackage}`;
                 window.open(`https://wa.me/919043857201?text=${message}`, '_blank');
             };
 
             return (
-                <div className="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-[#0A0A0A]">
+                <div className="app-container">
                     <div className="brand-watermark">Render</div>
 
-                    <aside className="hidden md:flex w-72 bg-[#0F0F0F] border-r border-white/5 p-10 flex-col z-20 shrink-0">
-                        <BrandHeading className="mb-16" />
-                        <nav className="flex flex-col gap-3">
-                            {[{id:'home', l:'Home', i:'home'}, {id:'services', l:'Services', i:'layers'}, {id:'pricing', l:'Pricing', i:'indian-rupee'}, {id:'contact', l:'Contact', i:'message-circle'}].map(n => (
-                                <button key={n.id} onClick={() => {setActiveTab(n.id); setStep(1);}} className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === n.id ? 'bg-[#800000] text-white' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}>
-                                    <Icon name={n.i} size={18} /> <span className="text-[10px] font-black uppercase tracking-widest">{n.l}</span>
+                    {/* Sidebar Desktop */}
+                    <aside className="hidden md:flex flex-col bg-[#0F0F0F] border-r border-white/5 p-10 z-50">
+                        <BrandHeading />
+                        <nav className="mt-16 flex flex-col gap-4">
+                            {['home','services','pricing','contact'].map((t, i) => (
+                                <button key={t} onClick={() => {setActiveTab(t); setStep(1);}} className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === t ? 'bg-[#800000] text-white' : 'text-gray-500 hover:text-white'}`}>
+                                    <Icon name={['home','layers','indian-rupee','message-circle'][i]} size={18} />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">{t}</span>
                                 </button>
                             ))}
                         </nav>
                     </aside>
 
-                    <main className="flex-grow relative flex flex-col h-full overflow-hidden z-10">
-                        <header className="md:hidden flex items-center justify-between p-6 bg-[#0F0F0F] border-b border-white/5 shrink-0">
-                            <BrandHeading />
-                        </header>
+                    {/* Mobile Header */}
+                    <header className="md:hidden flex items-center justify-between px-6 bg-[#0F0F0F] border-b border-white/5 z-50">
+                        <BrandHeading />
+                    </header>
 
-                        <div className="page-content-wrapper flex-grow flex flex-col justify-center px-6 md:px-16 overflow-hidden relative">
-                            
-                            {activeTab === 'home' && (
-                                <div className="fade-in max-w-4xl w-full mx-auto text-center">
-                                    <div className="inline-block px-3 py-1 rounded-full border border-[#D4AF37]/30 text-[#D4AF37] text-[9px] font-bold uppercase tracking-widest mb-6">Established 2024</div>
-                                    <h2 className="text-4xl md:text-8xl font-serif font-bold text-white mb-8 md:mb-12 leading-tight tracking-tighter">
-                                        Everything <br/><span className="gold-gradient italic font-normal text-5xl md:text-8xl">After Action</span>.
-                                    </h2>
-                                    <div className="max-w-xl mx-auto mb-10 h-20">
-                                        <p className="text-lg md:text-2xl font-light text-gray-400">{homeSections[homeIdx].text}</p>
-                                    </div>
-                                    <div className="flex justify-center gap-4 md:gap-10 w-full max-w-md mx-auto">
-                                        {homeSections.map((s, idx) => (
-                                            <div key={s.id} className="flex-grow cursor-pointer" onClick={() => {setHomeIdx(idx); setProgress(0);}}>
-                                                <div className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-2 ${idx === homeIdx ? 'text-[#D4AF37]' : 'text-gray-600'}`}>{s.label}</div>
-                                                <div className="progress-bar-bg"><div className="progress-bar-fill" style={{ width: idx === homeIdx ? `${progress}%` : idx < homeIdx ? '100%' : '0%' }}></div></div>
+                    {/* Content View */}
+                    <main className="content-area px-6 md:px-16">
+                        {activeTab === 'home' && (
+                            <div className="fade-in max-w-4xl mx-auto text-center py-10">
+                                <div className="text-[#D4AF37] text-[10px] font-black uppercase tracking-widest mb-4">Est. 2024</div>
+                                <h2 className="text-4xl md:text-8xl font-serif font-bold text-white mb-6 leading-tight">Everything <br/><span className="gold-gradient italic font-normal">After Action</span>.</h2>
+                                <p className="text-gray-400 text-lg md:text-2xl font-light mb-12 h-20">{homeSections[homeIdx].text}</p>
+                                <div className="flex gap-4 md:gap-10 max-w-lg mx-auto">
+                                    {homeSections.map((s, idx) => (
+                                        <div key={idx} className="flex-grow" onClick={() => {setHomeIdx(idx); setProgress(0);}}>
+                                            <div className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 ${idx === homeIdx ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+                                                {s.label}
                                             </div>
-                                        ))}
+                                            <div className="progress-bar-bg">
+                                                <div className="progress-bar-fill" style={{ width: idx === homeIdx ? `${progress}%` : idx < homeIdx ? '100%' : '0%' }}></div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'services' && (
+                            <div className="fade-in max-w-5xl mx-auto w-full py-10">
+                                <div className="flex bg-[#161616] p-1 rounded-xl mb-10 max-w-xs mx-auto">
+                                    {['video','photo','ai'].map(c => <button key={c} onClick={()=>setServiceCategory(c)} className={`flex-grow py-2 rounded-lg text-[9px] font-black uppercase transition-all ${serviceCategory===c?'bg-[#800000]':'text-gray-500'}`}>{c}</button>)}
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="text-center md:text-left">
+                                        <h3 className="text-3xl font-serif font-bold text-white mb-4">{servicesContent[serviceCategory].title} <span className="text-[#D4AF37] italic">Expertise</span></h3>
+                                        <p className="text-gray-400 text-sm mb-6 leading-relaxed">{servicesContent[serviceCategory].desc}</p>
+                                    </div>
+                                    <div className="glass-card p-6 rounded-3xl grid grid-cols-2 gap-4">
+                                        {servicesContent[serviceCategory].items.map(item => <div key={item} className="text-[10px] font-bold text-gray-500 flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></div>{item}</div>)}
                                     </div>
                                 </div>
-                            )}
+                            </div>
+                        )}
 
-                            {activeTab === 'services' && (
-                                <div className="fade-in max-w-5xl w-full mx-auto flex flex-col">
-                                    <div className="flex bg-[#161616] p-1 rounded-xl border border-white/5 mb-8 max-w-sm mx-auto w-full shrink-0">
-                                        {['video','photo','ai'].map(c => <button key={c} onClick={()=>setServiceCategory(c)} className={`flex-grow py-2 rounded-lg text-[10px] font-black uppercase transition-all ${serviceCategory===c?'bg-[#800000] text-white':'text-gray-500'}`}>{c}</button>)}
-                                    </div>
-                                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                                        <div className="text-center md:text-left">
-                                            <h3 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4 capitalize">{servicesContent[serviceCategory].title} <span className="text-[#D4AF37] italic font-normal">Expertise</span></h3>
-                                            <p className="text-gray-400 text-sm md:text-lg mb-6 leading-relaxed">
-                                                {servicesContent[serviceCategory].description}
-                                            </p>
-                                        </div>
-                                        <div className="glass-card p-6 md:p-10 rounded-[2rem] grid grid-cols-2 gap-3">
-                                            {servicesContent[serviceCategory].items.map(d => (
-                                                <div key={d} className="flex items-center gap-2 text-[10px] font-bold text-gray-500">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>{d}
+                        {activeTab === 'pricing' && (
+                            <div className="fade-in w-full py-10">
+                                <div className="flex bg-[#161616] p-1 rounded-xl mb-6 max-w-xs mx-auto">
+                                    {['video','photo','ai'].map(c => <button key={c} onClick={()=>setPricingCategory(c)} className={`flex-grow py-2 rounded-lg text-[9px] font-black uppercase ${pricingCategory===c?'bg-[#800000] text-white':'text-gray-500'}`}>{c}</button>)}
+                                </div>
+                                <div ref={carouselRef} className="carousel-container">
+                                    {pricingData[pricingCategory].map((p, i) => (
+                                        <div key={i} className="carousel-item">
+                                            <div className={`p-8 rounded-[2rem] border h-full flex flex-col ${p.popular?'bg-[#111] border-[#D4AF37]/40 shadow-xl':'bg-white/5 border-white/5'}`}>
+                                                <span className="text-[8px] font-black text-[#D4AF37] uppercase tracking-widest">{p.name}</span>
+                                                <div className="text-4xl font-black text-white my-4">₹{p.price}</div>
+                                                <div className="flex-grow space-y-3 mb-8">
+                                                    {p.features.map(f => <div key={f} className="text-[10px] text-gray-400 flex items-center gap-2"><Icon name="check" size={12} className="text-[#800000] shrink-0"/>{f}</div>)}
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'pricing' && (
-                                <div className="fade-in w-full flex flex-col items-center h-full justify-center">
-                                    <div className="flex bg-[#161616] p-1 rounded-xl border border-white/5 mb-6 max-w-sm w-full shrink-0">
-                                        {['video','photo','ai'].map(c => <button key={c} onClick={()=>setPricingCategory(c)} className={`flex-grow py-2 rounded-lg text-[10px] font-black uppercase ${pricingCategory===c?'bg-[#800000] text-white':'text-gray-500'}`}>{c}</button>)}
-                                    </div>
-                                    <div ref={carouselRef} className="carousel-container">
-                                        {pricingData[pricingCategory].map((p, i) => (
-                                            <div key={i} className="carousel-item h-full">
-                                                <div className={`p-6 md:p-8 h-full rounded-[2rem] border flex flex-col ${p.popular?'bg-[#111] border-[#D4AF37]/30 shadow-xl':'bg-white/5 border-white/5'}`}>
-                                                    <h3 className="text-[9px] font-black text-[#D4AF37] uppercase tracking-widest mb-1">{p.name}</h3>
-                                                    <div className="text-3xl font-black text-white mb-4">₹{p.price}</div>
-                                                    <div className="flex-grow space-y-3 mb-6">
-                                                        {p.features.map(f => <div key={f} className="text-[10px] text-gray-500 flex items-center gap-2"><Icon name="check" size={12} className="text-[#800000]"/>{f}</div>)}
-                                                    </div>
-                                                    <button onClick={() => {setFormData({...formData, directPackage: p.name}); setActiveTab('contact');}} className="w-full py-4 rounded-xl font-black text-[9px] uppercase tracking-widest bg-white/10 text-white hover:bg-[#800000] transition-colors">Select</button>
-                                                </div>
+                                                <button onClick={() => {setFormData({...formData, directPackage: p.name}); setActiveTab('contact');}} className="w-full py-4 rounded-xl bg-white/10 text-[9px] font-black uppercase tracking-widest hover:bg-[#800000]">Select</button>
                                             </div>
-                                        ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'contact' && (
+                            <div className="fade-in max-w-md mx-auto w-full glass-card p-10 rounded-[2.5rem]">
+                                {step === 1 ? (
+                                    <div className="text-center">
+                                        <h2 className="text-3xl font-serif font-bold italic mb-8">Identify.</h2>
+                                        <input type="text" placeholder="STUDIO NAME" className="w-full bg-transparent border-b border-white/10 py-4 text-center text-xl outline-none focus:border-[#D4AF37] mb-8 font-serif uppercase" value={formData.studioName} onChange={e=>setFormData({...formData, studioName:e.target.value})} />
+                                        <button disabled={!formData.studioName} onClick={()=>setStep(2)} className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">Next Step</button>
                                     </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'contact' && (
-                                <div className="fade-in max-w-md w-full mx-auto glass-card p-8 md:p-12 rounded-[3rem]">
-                                    {step === 1 ? (
-                                        <div>
-                                            <h2 className="text-2xl md:text-3xl font-serif font-bold text-white mb-6 italic">Identify.</h2>
-                                            <input type="text" placeholder="STUDIO NAME" className="w-full bg-transparent border-b border-white/10 py-4 text-xl text-white outline-none mb-8 focus:border-[#D4AF37] font-serif uppercase" value={formData.studioName} onChange={e=>setFormData({...formData, studioName:e.target.value})} />
-                                            <button disabled={!formData.studioName} onClick={()=>setStep(2)} className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">Next</button>
-                                        </div>
-                                    ) : (
-                                        <div className="text-center">
-                                            <h2 className="text-2xl md:text-3xl font-serif font-bold text-white mb-6 italic">Connect.</h2>
-                                            <div className="grid grid-cols-2 gap-2 mb-8">
-                                                {ALL_SERVICES.map(s => <button key={s} onClick={()=>{setFormData(prev=>({ ...prev, interests: prev.interests.includes(s) ? prev.interests.filter(i=>i!==s) : [...prev.interests, s] }))}} className={`py-3 rounded-lg border text-[8px] font-black uppercase ${formData.interests.includes(s)?'bg-[#800000] border-[#D4AF37] text-white':'bg-white/5 border-transparent text-gray-500'}`}>{s}</button>)}
-                                            </div>
-                                            <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2"><Icon name="send" size={14}/> Open WhatsApp</button>
-                                            <button onClick={()=>setStep(1)} className="mt-4 text-[8px] uppercase tracking-widest text-gray-500 hover:text-white transition-colors">← Back</button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                        </div>
-
-                        <nav className="md:hidden h-20 bg-[#0F0F0F] border-t border-white/5 flex items-center justify-around z-50 px-4 shrink-0">
-                            {['home', 'layers', 'indian-rupee', 'message-circle'].map((icon, idx) => {
-                                const tabs = ['home', 'services', 'pricing', 'contact'];
-                                const isActive = activeTab === tabs[idx];
-                                return (
-                                    <button key={icon} onClick={() => {setActiveTab(tabs[idx]); setStep(1);}} className={`flex flex-col items-center gap-1 transition-all ${isActive ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
-                                        <Icon name={icon} size={20}/>
-                                        <span className="text-[7px] font-bold uppercase tracking-tighter">{tabs[idx]}</span>
-                                    </button>
-                                )
-                            })}
-                        </nav>
+                                ) : (
+                                    <div className="text-center">
+                                        <h2 className="text-3xl font-serif font-bold italic mb-8">Connect.</h2>
+                                        <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-5 rounded-xl font-black uppercase text-[10px] flex items-center justify-center gap-3"><Icon name="send" size={16}/> Open WhatsApp</button>
+                                        <button onClick={()=>setStep(1)} className="mt-6 text-[9px] text-gray-500 uppercase tracking-widest">Back</button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </main>
+
+                    {/* Mobile Navigation */}
+                    <nav className="md:hidden mobile-nav">
+                        {['home', 'layers', 'indian-rupee', 'message-circle'].map((icon, idx) => {
+                            const tabs = ['home', 'services', 'pricing', 'contact'];
+                            const isActive = activeTab === tabs[idx];
+                            return (
+                                <button key={idx} onClick={() => {setActiveTab(tabs[idx]); setStep(1);}} className={`flex flex-col items-center gap-1 p-2 ${isActive ? 'text-[#D4AF37]' : 'text-gray-500'}`}>
+                                    <Icon name={icon} size={22} />
+                                    <span className="text-[8px] font-black uppercase tracking-tighter">{tabs[idx]}</span>
+                                </button>
+                            );
+                        })}
+                    </nav>
                 </div>
             );
         };
