@@ -1,0 +1,466 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Home, 
+  Layers, 
+  IndianRupee, 
+  MessageCircle, 
+  CheckCircle2, 
+  Film, 
+  Sparkles, 
+  ArrowRight,
+  Send,
+  Building2,
+  Clock,
+  Zap,
+  Camera,
+  Printer,
+  ChevronLeft,
+  Users,
+  Wand2,
+  Workflow
+} from 'lucide-react';
+
+/**
+ * RENDERSPACE - Post-Production Studio Portfolio
+ * Optimized for WhatsApp lead conversion and comprehensive service selection.
+ */
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [homeSection, setHomeSection] = useState('who');
+  const [serviceCategory, setServiceCategory] = useState('video');
+  const [pricingCategory, setPricingCategory] = useState('video');
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({ 
+    studioName: '', 
+    interests: [],
+    directPackage: '' 
+  });
+
+  const WHATSAPP_NUMBER = "919043857201";
+
+  // --- Data Definitions ---
+  const navItems = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'services', label: 'Services', icon: Layers },
+    { id: 'pricing', label: 'Pricing', icon: IndianRupee },
+    { id: 'contact', label: 'Contact', icon: MessageCircle },
+  ];
+
+  const servicesContent = {
+    video: {
+      title: "Video Post-Production",
+      specialization: "Cinematic Storytelling & Multi-cam Synchronization",
+      description: "We specialize in handling massive amounts of 4K/Log footage, transforming raw chaos into structured, emotional narratives that respect cultural nuances.",
+      deliverables: ["Social Media Reels (9:16)", "Cinematic Teasers", "Wedding Documentaries", "Full Event Raw Sync", "Multi-cam Edit", "Color Grading"]
+    },
+    photo: {
+      title: "Photo & Print",
+      specialization: "Editorial Retouching & Bespoke Album Layouts",
+      description: "Our artists focus on skin-tone accuracy and magazine-standard layouts. We bridge the gap between digital captures and physical legacy archives.",
+      deliverables: ["High-end Skin Retouching", "Color Consistency", "Luxury Album Design", "Parent Book Layouts", "Print-Ready Export", "Digital Galleries"]
+    },
+    ai: {
+      title: "AI & Restoration",
+      specialization: "Deep-Learning Restoration & Intelligent Inclusion",
+      description: "Using proprietary AI models, we restore lost history. We specialize in fixing low-res ancestral photos and adding missing members to group portraits.",
+      deliverables: ["AI Face Reconstruction", "Person Inclusion", "Old Photo Colorization", "4K Upscaling", "Background Removal", "Ancestral Tribute Films"]
+    }
+  };
+
+  const pricingData = {
+    video: [
+      { name: "Starter", cap: "3 Events / mo", price: "25k" },
+      { name: "Growth", cap: "5 Events / mo", price: "55k", popular: true },
+      { name: "Scale", cap: "10 Events / mo", price: "99k" },
+      { name: "Enterprise", cap: "20 Events / mo", price: "1.8L" }
+    ],
+    photo: [
+      { 
+        name: "Essential Print Pack", 
+        color: "#22c55e", 
+        price: "8k - 15k", 
+        features: ["Photo corrections", "Album design", "Standard finish", "1 basic frame"] 
+      },
+      { 
+        name: "Premium Print Pack", 
+        color: "#3b82f6", 
+        price: "15k - 30k", 
+        popular: true,
+        features: ["Advanced retouching", "Wedding album + magazine", "Premium paper", "2–3 premium frames"] 
+      },
+      { 
+        name: "Luxury Print Pack", 
+        color: "#ef4444", 
+        price: "30k - 45k", 
+        features: ["High-end retouching", "Custom album + mini albums", "Luxury covers", "Wall portrait set"] 
+      }
+    ],
+    ai: [
+      { 
+        name: "AI Person Inclusion", 
+        cap: "Photo Design", 
+        price: "8,000", 
+        sub: "per image",
+        features: ["Natural lighting match", "Perspective alignment", "Designer supervision"] 
+      },
+      { 
+        name: "AI Memory Video", 
+        cap: "Expired Person Inclusion", 
+        price: "15k - 75k", 
+        popular: true,
+        features: ["Photo-to-video composition", "Cinematic treatment", "Dignified storytelling"] 
+      }
+    ]
+  };
+
+  const ALL_SERVICES = [
+    'Video Post-Production',
+    'Cinematic Reels & Teasers',
+    'Photo Editorial Retouching',
+    'Bespoke Album Design',
+    'Premium Printing & Framing',
+    'AI Person Inclusion',
+    'AI Restoration & Colorization',
+    'AI Memory Video Films'
+  ];
+
+  const handleToggleInterest = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      interests: prev.interests.includes(id) ? prev.interests.filter(i => i !== id) : [...prev.interests, id]
+    }));
+  };
+
+  const handleEnquireFromPricing = (planName) => {
+    setFormData(prev => ({ ...prev, directPackage: planName }));
+    setActiveTab('contact');
+    setStep(1);
+  };
+
+  const sendWhatsApp = () => {
+    const interestsStr = formData.interests.length > 0 ? formData.interests.join(', ') : "General inquiry";
+    const packagePrefix = formData.directPackage ? `*Interested in:* ${formData.directPackage}%0A` : '';
+    
+    const message = `Hello Renderspace! %0A%0A*Studio Partnership Inquiry*%0A%0A*Studio:* ${formData.studioName}%0A${packagePrefix}*Selected Services:* ${interestsStr}%0A%0AI'd like to discuss a collaboration.`;
+    
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+  };
+
+  const fadeUp = "animate-in fade-in slide-in-from-bottom-6 duration-700 ease-out fill-mode-forwards";
+
+  return (
+    <div className="h-screen w-full bg-[#0F0F0F] text-[#E0E0E0] font-sans overflow-hidden flex flex-col md:flex-row">
+      
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-72 bg-[#161616] border-r border-white/5 p-8 flex-col z-30">
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-1.5 h-6 bg-[#800000]"></div>
+            <h1 className="text-2xl font-black tracking-tighter text-white font-serif">RENDERSPACE</h1>
+          </div>
+          <p className="text-[10px] tracking-[0.3em] text-[#D4AF37] font-bold uppercase pl-3">Post-Studio</p>
+        </div>
+        <nav className="flex flex-col gap-3">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => { setActiveTab(item.id); setStep(1); setFormData(p => ({...p, directPackage: ''})); }}
+              className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 ${
+                activeTab === item.id ? 'bg-[#800000] text-white shadow-lg' : 'text-gray-500 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <item.icon size={20} />
+              <span className="text-sm font-bold tracking-wide">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-grow relative flex flex-col overflow-hidden">
+        
+        {/* Mobile Header */}
+        <header className="md:hidden p-6 bg-[#0F0F0F] border-b border-white/5 flex justify-between items-center z-30">
+          <h1 className="text-xl font-black tracking-tighter text-white font-serif">RENDERSPACE</h1>
+          <div className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">Post-Studio</div>
+        </header>
+
+        <div className="flex-grow overflow-y-auto pb-32 md:pb-10 px-6 md:px-12 pt-8 md:pt-12">
+          
+          {/* HOME PAGE */}
+          {activeTab === 'home' && (
+            <div className={`${fadeUp} max-w-4xl mx-auto`}>
+              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-10 text-center leading-tight">
+                Your Dedicated <span className="text-[#D4AF37]">Backend</span> for Cinematic Excellence.
+              </h2>
+              
+              <div className="flex bg-[#161616] p-1.5 rounded-2xl border border-white/5 mb-12 shadow-2xl">
+                {[
+                  { id: 'who', label: 'Who We Are', icon: Users },
+                  { id: 'what', label: 'What We Do', icon: Wand2 },
+                  { id: 'how', label: 'How We Do', icon: Workflow },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setHomeSection(s.id)}
+                    className={`flex-grow flex items-center justify-center gap-2 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+                      homeSection === s.id ? 'bg-white text-black' : 'text-gray-500 hover:text-white'
+                    }`}
+                  >
+                    <s.icon size={14} />
+                    <span className="hidden md:inline">{s.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="bg-white/5 p-8 md:p-12 rounded-[3rem] border border-white/10 min-h-[300px] flex flex-col justify-center">
+                {homeSection === 'who' && (
+                  <div className="animate-in fade-in duration-500">
+                    <h3 className="text-[#D4AF37] text-xs font-bold uppercase tracking-[0.3em] mb-4">The Identity</h3>
+                    <p className="text-xl md:text-2xl text-white font-light leading-relaxed">
+                      We are a specialized team of editors, colorists, and AI artists serving high-end wedding and commercial studios globally. We operate as your invisible silent partner.
+                    </p>
+                  </div>
+                )}
+                {homeSection === 'what' && (
+                  <div className="animate-in fade-in duration-500">
+                    <h3 className="text-[#D4AF37] text-xs font-bold uppercase tracking-[0.3em] mb-4">The Capability</h3>
+                    <p className="text-xl md:text-2xl text-white font-light leading-relaxed">
+                      We turn massive raw data into polished cinematic films, magazine-grade photo albums, and AI-restored legacy memories. We complete the story you capture.
+                    </p>
+                  </div>
+                )}
+                {homeSection === 'how' && (
+                  <div className="animate-in fade-in duration-500">
+                    <h3 className="text-[#D4AF37] text-xs font-bold uppercase tracking-[0.3em] mb-4">The Process</h3>
+                    <p className="text-xl md:text-2xl text-white font-light leading-relaxed">
+                      Through a structured 15-day workflow, we use cloud-syncing and ritual-aware pacing to ensure every delivery is consistent, culturally accurate, and rapid.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* SERVICES PAGE */}
+          {activeTab === 'services' && (
+            <div className={`${fadeUp} max-w-6xl mx-auto`}>
+              <div className="mb-10 text-center">
+                <span className="text-[#D4AF37] text-xs font-bold tracking-[0.4em] uppercase">The Portfolio</span>
+                <h2 className="text-3xl font-serif font-bold text-white mt-2">Specialized Expertise</h2>
+              </div>
+
+              <div className="flex bg-[#161616] p-1.5 rounded-2xl border border-white/5 mb-12 shadow-2xl max-w-3xl mx-auto">
+                {[
+                  { id: 'video', label: 'Video Post', icon: Film },
+                  { id: 'photo', label: 'Photo/Print', icon: Camera },
+                  { id: 'ai', label: 'AI/Restoration', icon: Sparkles },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setServiceCategory(s.id)}
+                    className={`flex-grow flex items-center justify-center gap-2 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${
+                      serviceCategory === s.id ? 'bg-[#800000] text-white' : 'text-gray-500 hover:text-white'
+                    }`}
+                  >
+                    <s.icon size={14} />
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-in fade-in duration-500">
+                <div>
+                  <h3 className="text-4xl font-serif font-bold text-white mb-6">{servicesContent[serviceCategory].title}</h3>
+                  <div className="flex items-center gap-2 text-[#D4AF37] mb-4">
+                    <Zap size={16} />
+                    <span className="text-xs font-bold uppercase tracking-widest">{servicesContent[serviceCategory].specialization}</span>
+                  </div>
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    {servicesContent[serviceCategory].description}
+                  </p>
+                </div>
+                <div className="bg-white/5 p-8 rounded-[3rem] border border-white/10">
+                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6">Deliverables</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {servicesContent[serviceCategory].deliverables.map((d, i) => (
+                      <div key={i} className="flex items-center gap-3 text-xs text-gray-400">
+                        <CheckCircle2 size={14} className="text-[#800000]" />
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PRICING PAGE */}
+          {activeTab === 'pricing' && (
+            <div className={`${fadeUp} max-w-7xl mx-auto`}>
+              <div className="mb-12 text-center md:text-left">
+                <h2 className="text-4xl font-serif font-bold text-white">Investment Plans.</h2>
+                <p className="text-gray-500 mt-2">Strategic backend partnerships for your studio.</p>
+              </div>
+
+              <div className="flex bg-[#161616] p-1.5 rounded-2xl border border-white/5 mb-16 shadow-2xl max-w-md">
+                {['video', 'photo', 'ai'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setPricingCategory(cat)}
+                    className={`flex-grow py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${
+                      pricingCategory === cat ? 'bg-[#800000] text-white' : 'text-gray-500 hover:text-white'
+                    }`}
+                  >
+                    {cat === 'photo' ? 'Photo/Print' : cat === 'ai' ? 'AI Memory' : 'Video'}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {pricingData[pricingCategory].map((plan, i) => (
+                  <div key={i} className={`p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col ${
+                    plan.popular ? 'bg-white/10 border-[#800000] shadow-2xl md:scale-105 z-10' : 'bg-white/5 border-white/10'
+                  }`}>
+                    {plan.popular && <span className="bg-[#800000] text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6 self-center">Most Requested</span>}
+                    
+                    <div className="flex items-center gap-3 mb-2">
+                       {plan.color && <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: plan.color }}></div>}
+                       <h3 className="text-lg font-bold text-white">{plan.name}</h3>
+                    </div>
+                    
+                    {plan.cap && <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-6">{plan.cap}</p>}
+                    
+                    <div className="mb-8">
+                      <span className="text-3xl font-black text-white">₹{plan.price}</span>
+                      {plan.sub && <span className="text-gray-500 text-[10px] uppercase ml-2">{plan.sub}</span>}
+                    </div>
+
+                    <div className="flex-grow flex flex-col gap-3 mb-10">
+                      {(plan.features || []).map((f, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-[11px] text-gray-400 leading-tight">
+                          <div className="w-1 h-1 rounded-full bg-[#800000] mt-1.5"></div>
+                          {f}
+                        </div>
+                      ))}
+                    </div>
+
+                    <button 
+                      onClick={() => handleEnquireFromPricing(plan.name)}
+                      className={`w-full py-4 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all ${
+                        plan.popular ? 'bg-[#800000] text-white shadow-xl shadow-[#800000]/20' : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      Enquire
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {pricingCategory === 'photo' && (
+                <div className="mt-16 flex items-center gap-4 p-8 bg-white/5 rounded-3xl border border-white/10 border-dashed">
+                  <Clock className="text-[#D4AF37]" size={24} />
+                  <div>
+                    <h4 className="text-white font-bold text-xs uppercase tracking-widest">Photo & Print Timeline</h4>
+                    <p className="text-gray-500 text-sm italic">15 working days from submission & final approval.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* CONTACT PAGE */}
+          {activeTab === 'contact' && (
+            <div className={`flex items-center justify-center min-h-full ${fadeUp}`}>
+              <div className="w-full max-w-xl bg-[#161616] rounded-[3rem] p-10 md:p-14 border border-white/5 shadow-3xl">
+                {step === 1 ? (
+                  <div className="animate-in fade-in duration-500">
+                    <Building2 className="text-[#800000] mb-8" size={32} />
+                    {formData.directPackage && (
+                      <span className="bg-[#800000]/20 text-[#800000] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">
+                        Inquiry for: {formData.directPackage}
+                      </span>
+                    )}
+                    <h2 className="text-3xl font-serif font-bold text-white mb-2">Studio Identity.</h2>
+                    <p className="text-gray-400 mb-10 text-sm">Let us know which studio we are talking to.</p>
+                    <input 
+                      type="text"
+                      placeholder="Your Studio Name"
+                      className="w-full bg-transparent border-b-2 border-white/10 py-4 text-2xl text-white focus:border-[#800000] outline-none transition-all placeholder:text-gray-800 font-serif mb-12"
+                      value={formData.studioName}
+                      onChange={(e) => setFormData({...formData, studioName: e.target.value})}
+                      autoFocus
+                    />
+                    <button 
+                      disabled={!formData.studioName}
+                      onClick={() => setStep(2)}
+                      className="w-full bg-white text-black py-5 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-[#D4AF37] transition-all disabled:opacity-20 flex items-center justify-center gap-3"
+                    >
+                      Choose Services <ArrowRight size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+                    <button onClick={() => setStep(1)} className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest mb-10">
+                      <ChevronLeft size={16} /> Back
+                    </button>
+                    <h2 className="text-2xl font-serif font-bold text-white mb-6">Select Your Needs</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-10">
+                      {ALL_SERVICES.map(opt => (
+                        <button 
+                          key={opt}
+                          onClick={() => handleToggleInterest(opt)}
+                          className={`flex items-center p-4 rounded-xl border text-left transition-all ${
+                            formData.interests.includes(opt) ? 'bg-[#800000]/20 border-[#800000] text-white shadow-lg' : 'bg-white/5 border-white/5 text-gray-500'
+                          }`}
+                        >
+                          <span className="font-bold text-[11px] leading-tight flex-grow">{opt}</span>
+                          {formData.interests.includes(opt) && <CheckCircle2 className="ml-2 w-4 h-4 text-[#800000]" />}
+                        </button>
+                      ))}
+                    </div>
+                    <button 
+                      disabled={formData.interests.length === 0 && !formData.directPackage}
+                      onClick={sendWhatsApp}
+                      className="w-full bg-[#25D366] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-green-950/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                      Connect on WhatsApp <Send size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Mobile Navigation */}
+        <nav className="md:hidden fixed bottom-6 left-6 right-6 h-20 bg-[#161616]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] flex items-center justify-around px-4 z-50 shadow-2xl">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => { setActiveTab(item.id); setStep(1); setFormData(p => ({...p, directPackage: ''})); }}
+              className={`flex flex-col items-center gap-1.5 transition-colors duration-300 ${activeTab === item.id ? 'text-[#D4AF37]' : 'text-gray-500'}`}
+            >
+              <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+              <span className="text-[8px] font-black uppercase tracking-widest">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+      </main>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0F0F0F; overflow: hidden; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
+      `}</style>
+    </div>
+  );
+};
+
+export default App;
+
