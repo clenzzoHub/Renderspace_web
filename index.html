@@ -3,233 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RENDERSPACE | Premium Post-Studio</title>
+    <title>RENDERSPACE | Premium Post-Studio Partner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        :root { --nav-height: 75px; --header-height: 65px; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0A0A0A; color: #E0E0E0; margin: 0; padding: 0; overflow: hidden; height: 100%; width: 100%; position: fixed; }
+        :root { --nav-height: 70px; --header-height: 60px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #0A0A0A; 
+            color: #E0E0E0; 
+            margin: 0; padding: 0; overflow: hidden; height: 100dvh; width: 100vw; position: fixed; 
+        }
         .font-serif { font-family: 'Playfair Display', serif; }
         
-        /* Layout Grids */
         .app-container { display: grid; height: 100dvh; grid-template-rows: var(--header-height) 1fr var(--nav-height); }
-        @media (min-width: 768px) { .app-container { grid-template-rows: 1fr; grid-template-columns: 280px 1fr; } }
+        @media (min-width: 768px) { 
+            .app-container { grid-template-rows: 1fr; grid-template-columns: 260px 1fr; } 
+        }
 
-        .content-area { overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .content-area { overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; scroll-behavior: smooth; }
         
-        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
-        .brand-watermark { position: fixed; bottom: 80px; right: -20px; font-size: 15vw; font-weight: 900; color: rgba(255, 255, 255, 0.02); pointer-events: none; z-index: 0; font-family: 'Playfair Display', serif; font-style: italic; }
         .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #F5E6AD 50%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; gap: 1rem; padding: 1rem 0; width: 100%; }
-        .carousel-container::-webkit-scrollbar { display: none; }
-        .carousel-item { scroll-snap-align: center; flex: 0 0 85%; max-width: 320px; }
+        /* Optimized Compact Gallery */
+        .scroll-track { display: flex; width: calc(140px * 20); animation: scroll 25s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-140px * 10)); } }
+        .scroll-item { width: 140px; height: 180px; flex-shrink: 0; padding: 0 4px; }
+        .scroll-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.05); }
 
-        .progress-bar-bg { height: 2px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 6px; }
-        .progress-bar-fill { height: 100%; background: #D4AF37; transition: width 0.1s linear; }
+        .progress-bar-bg { height: 2px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .progress-bar-fill { height: 100%; background: #D4AF37; transition: width 0.05s linear; }
 
-        .mobile-nav { background: #0F0F0F; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
+        .mobile-nav { background: #080808; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
+        
+        .top-ad-banner { 
+            background: linear-gradient(90deg, #1a0000 0%, #3d0000 100%); 
+            border-radius: 1rem; 
+            border: 1px solid rgba(212,175,55,0.15);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .service-toggle { background: rgba(255,255,255,0.03); border-radius: 99px; padding: 4px; display: flex; gap: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        .toggle-btn { flex: 1; padding: 8px 12px; border-radius: 99px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #666; }
+        .toggle-btn.active { background: #D4AF37; color: black; box-shadow: 0 4px 12px rgba(212,175,55,0.2); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
-        const Icon = ({ name, size = 20, className = "" }) => {
+        const Icon = ({ name, size = 18, className = "" }) => {
             useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
             return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
         };
-
-        const BrandHeading = () => (
-            <div className="flex flex-col">
-                <div className="text-xl font-extrabold tracking-tighter text-white leading-none">
-                    RENDER<span className="text-[#D4AF37]">SPACE</span>
-                </div>
-                <div className="text-[8px] tracking-[0.4em] text-gray-500 uppercase mt-1 font-bold">The Post-Studio</div>
-            </div>
-        );
 
         const App = () => {
             const [activeTab, setActiveTab] = useState('home');
             const [homeIdx, setHomeIdx] = useState(0);
             const [progress, setProgress] = useState(0);
-            const [serviceCategory, setServiceCategory] = useState('video');
-            const [pricingCategory, setPricingCategory] = useState('video');
-            const [step, setStep] = useState(1);
-            const [formData, setFormData] = useState({ studioName: '', interests: [], directPackage: '' });
+            const [serviceType, setServiceType] = useState('video');
+            const [contactMode, setContactMode] = useState(null);
+            const [formData, setFormData] = useState({ studioName: '', personName: '', contact: '', email: '', eventsPerMonth: '', location: '' });
             
-            const carouselRef = useRef(null);
-
             const homeSections = [
-                { label: 'Who We Are', text: "A specialized high-performance post-production team serving premium studios globally as a silent backend partner." },
-                { label: 'What We Do', text: "We deliver high-end cinematic edits, editorial retouching, and AI restoration solutions that complete your vision." },
-                { label: 'How We Work', text: "A rigorous 15-day production cycle powered by secure cloud-collaboration to ensure absolute punctuality." }
+                { label: 'Network', text: "Elite post-production specialists serving as your dedicated internal department." },
+                { label: 'Impact', text: "Deliver cinematic wedding stories, high-end retouching, and premium print layouts." },
+                { label: 'Flow', text: "Structured 15-day cycle. Scale up to 10 events monthly without overhead." }
             ];
 
-            const servicesContent = {
-                video: { title: "Video", desc: "High-end cinematic workflows designed for high-bitrate raw data and complex narratives.", items: ['Teasers', '4K Grading', 'Syncing', 'Curation', 'Documentary', 'Mastering'] },
-                photo: { title: "Photo", desc: "Editorial-grade retouching and sophisticated color science for the modern photographer.", items: ['Retouching', 'Correction', 'Grading', 'Culling', 'Album Spreads', 'Hi-Res'] },
-                ai: { title: "AI", desc: "Next-gen neural solutions for restoring legacy memories and perfecting contemporary captures.", items: ['Inclusion', 'Restoration', 'Colorize', 'Upscale', 'De-noise', 'Cleanup'] }
-            };
+            // Curated South Indian & Indian wedding imagery
+            const photos = [
+                "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&q=80", // Silk Saree
+                "https://images.unsplash.com/photo-1610173826014-871630e20f92?w=400&q=80", // Temple Wedding
+                "https://images.unsplash.com/photo-1595199833332-909772c91811?w=400&q=80", // South Indian Bride
+                "https://images.unsplash.com/photo-1621251307613-2d1136c84c31?w=400&q=80", // Traditional Jewelry
+                "https://images.unsplash.com/photo-1612459284970-e8f027596582?w=400&q=80", // Henna/Indian
+                "https://images.unsplash.com/photo-1632333526733-41c88327336b?w=400&q=80", // South Indian Couple
+                "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80", // Groom
+                "https://images.unsplash.com/photo-1623091211158-b11be1701540?w=400&q=80", // Rituals
+                "https://images.unsplash.com/photo-1605886475373-1f198544e4a0?w=400&q=80", // Jasmine/Flowers
+                "https://images.unsplash.com/photo-1621252179027-94459d278660?w=400&q=80"  // Mandap
+            ];
 
-            const pricingData = {
-                video: [
-                    { name: "Starter", price: "25k", features: ["Essential Sync", "Highlight", "Color", "1 Rev"] },
-                    { name: "Growth", price: "55k", popular: true, features: ["Storytelling", "Reels", "Adv Grading", "2 Rev"] },
-                    { name: "Scale", price: "99k", features: ["Full Event", "Doc Edit", "Premium Grading", "Ded Editor"] },
-                    { name: "Enterprise", price: "1.8L", features: ["Studio Team", "Pipeline", "24/7 Support", "HD Mgmt"] }
-                ],
-                photo: [
-                    { name: "Essential", price: "8k", features: ["Correction", "Design", "Standard"] },
-                    { name: "Premium", price: "25k", popular: true, features: ["Retouching", "Album", "3 frames"] },
-                    { name: "Luxury", price: "45k", features: ["Skin Work", "Custom", "Wall Set"] }
-                ],
-                ai: [
-                    { name: "Inclusion", price: "8k", features: ["Lighting", "Alignment", "High-res"] },
-                    { name: "Memory", price: "35k", popular: true, features: ["Photo2Video", "Cinematic", "License"] }
-                ]
+            const serviceDetails = {
+                video: {
+                    desc: "Cinematic storytelling designed for high-end wedding studios. We focus on emotional narratives and color science.",
+                    items: ["4K Documentary Edit", "2-3 Min Cinematic Highlights", "Instagram Reels (Vertical)", "Sync Audio Mastering", "LUTS & Color Grading", "Multi-cam Curation"]
+                },
+                photo: {
+                    desc: "Editorial-grade image processing. We handle the heavy lifting of culling and high-end skin retouching.",
+                    items: ["Smart AI Culling", "Skin & Body Retouching", "Frequency Separation", "Consistent Color Grading", "HDR Blending", "Batch Correction"]
+                },
+                ai: {
+                    desc: "The future of post-production. Leveraging machine learning to speed up workflows without losing soul.",
+                    items: ["AI Face Recognition Culling", "Noise Reduction (Low-light)", "AI Upscaling (Old Shoots)", "Generative Fill Backgrounds", "Smart Object Removal", "Voice-to-Text Subtitles"]
+                }
             };
-
-            useEffect(() => {
-                if (activeTab === 'pricing' && carouselRef.current) carouselRef.current.scrollLeft = 0;
-            }, [activeTab, pricingCategory]);
 
             useEffect(() => {
                 if (activeTab !== 'home') return;
                 const timer = setInterval(() => {
                     setProgress(p => {
                         if (p >= 100) { setHomeIdx(prev => (prev + 1) % homeSections.length); return 0; }
-                        return p + 1.2;
+                        return p + 1;
                     });
                 }, 50);
                 return () => clearInterval(timer);
             }, [activeTab, homeIdx]);
 
-            const sendWhatsApp = () => {
-                const message = `Hello Renderspace! %0A%0A*Studio:* ${formData.studioName}%0A*Package:* ${formData.directPackage}`;
-                window.open(`https://wa.me/919043857201?text=${message}`, '_blank');
-            };
-
             return (
                 <div className="app-container">
-                    <div className="brand-watermark">Render</div>
-
-                    {/* Sidebar Desktop */}
-                    <aside className="hidden md:flex flex-col bg-[#0F0F0F] border-r border-white/5 p-10 z-50">
-                        <BrandHeading />
-                        <nav className="mt-16 flex flex-col gap-4">
+                    {/* Desktop Side Nav */}
+                    <aside className="hidden md:flex flex-col bg-[#080808] border-r border-white/5 p-8 z-50">
+                        <div className="mb-12">
+                            <div className="text-xl font-extrabold text-white tracking-tighter">RENDER<span className="text-[#D4AF37]">SPACE</span></div>
+                            <div className="text-[7px] tracking-[0.4em] text-gray-500 uppercase mt-1 font-bold">Partner Studio</div>
+                        </div>
+                        <nav className="flex flex-col gap-2">
                             {['home','services','pricing','contact'].map((t, i) => (
-                                <button key={t} onClick={() => {setActiveTab(t); setStep(1);}} className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === t ? 'bg-[#800000] text-white' : 'text-gray-500 hover:text-white'}`}>
-                                    <Icon name={['home','layers','indian-rupee','message-circle'][i]} size={18} />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">{t}</span>
+                                <button key={t} onClick={() => {setActiveTab(t); setContactMode(null);}} className={`flex items-center gap-4 px-5 py-3 rounded-xl transition-all ${activeTab === t ? 'bg-[#800000] text-white shadow-lg' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}>
+                                    <Icon name={['home','layers','indian-rupee','message-circle'][i]} />
+                                    <span className="text-[9px] font-black uppercase tracking-widest">{t}</span>
                                 </button>
                             ))}
                         </nav>
                     </aside>
 
                     {/* Mobile Header */}
-                    <header className="md:hidden flex items-center justify-between px-6 bg-[#0F0F0F] border-b border-white/5 z-50">
-                        <BrandHeading />
+                    <header className="md:hidden flex items-center justify-between px-6 bg-[#080808] border-b border-white/5">
+                        <div className="text-lg font-black text-white tracking-tighter">RENDER<span className="text-[#D4AF37]">SPACE</span></div>
                     </header>
 
-                    {/* Content View */}
-                    <main className="content-area px-6 md:px-16">
+                    <main className="content-area">
                         {activeTab === 'home' && (
-                            <div className="fade-in max-w-4xl mx-auto text-center py-10">
-                                <div className="text-[#D4AF37] text-[10px] font-black uppercase tracking-widest mb-4">Est. 2024</div>
-                                <h2 className="text-4xl md:text-8xl font-serif font-bold text-white mb-6 leading-tight">Everything <br/><span className="gold-gradient italic font-normal">After Action</span>.</h2>
-                                <p className="text-gray-400 text-lg md:text-2xl font-light mb-12 h-20">{homeSections[homeIdx].text}</p>
-                                <div className="flex gap-4 md:gap-10 max-w-lg mx-auto">
-                                    {homeSections.map((s, idx) => (
-                                        <div key={idx} className="flex-grow" onClick={() => {setHomeIdx(idx); setProgress(0);}}>
-                                            <div className={`text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 ${idx === homeIdx ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
-                                                {s.label}
+                            <div className="fade-in p-6 md:p-12 flex flex-col justify-center min-h-full">
+                                <div className="top-ad-banner px-6 py-4 flex items-center justify-between gap-6 shadow-2xl">
+                                    <div className="flex-1">
+                                        <div className="text-[#D4AF37] text-[8px] font-black uppercase tracking-widest mb-1">Limited Availability</div>
+                                        <h4 className="text-sm md:text-lg font-serif font-bold text-white leading-tight">Scale Your Studio To <span className="italic text-[#D4AF37]">Infinity</span>.</h4>
+                                    </div>
+                                    <button onClick={()=>setActiveTab('pricing')} className="shrink-0 bg-white text-black px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-tighter whitespace-nowrap">Explore Plans</button>
+                                </div>
+
+                                <div className="text-center max-w-4xl mx-auto">
+                                    <h1 className="text-3xl md:text-7xl font-serif font-bold text-white mb-6 leading-none">Hire a team at <br/><span className="gold-gradient italic font-normal">the cost of an editor</span>.</h1>
+                                    <p className="text-gray-400 text-sm md:text-xl font-light mb-10 h-16 flex items-center justify-center italic opacity-80">"{homeSections[homeIdx].text}"</p>
+                                    
+                                    <div className="flex gap-4 md:gap-8 max-w-sm mx-auto">
+                                        {homeSections.map((s, idx) => (
+                                            <div key={idx} className="flex-grow">
+                                                <div className={`text-[8px] font-black uppercase tracking-widest mb-1 ${idx === homeIdx ? 'text-[#D4AF37]' : 'text-gray-700'}`}>{s.label}</div>
+                                                <div className="progress-bar-bg">
+                                                    <div className="progress-bar-fill" style={{ width: idx === homeIdx ? `${progress}%` : idx < homeIdx ? '100%' : '0%' }}></div>
+                                                </div>
                                             </div>
-                                            <div className="progress-bar-bg">
-                                                <div className="progress-bar-fill" style={{ width: idx === homeIdx ? `${progress}%` : idx < homeIdx ? '100%' : '0%' }}></div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
 
                         {activeTab === 'services' && (
-                            <div className="fade-in max-w-5xl mx-auto w-full py-10">
-                                <div className="flex bg-[#161616] p-1 rounded-xl mb-10 max-w-xs mx-auto">
-                                    {['video','photo','ai'].map(c => <button key={c} onClick={()=>setServiceCategory(c)} className={`flex-grow py-2 rounded-lg text-[9px] font-black uppercase transition-all ${serviceCategory===c?'bg-[#800000]':'text-gray-500'}`}>{c}</button>)}
+                            <div className="fade-in py-8">
+                                <div className="px-6 md:px-12 mb-6">
+                                    <h2 className="text-3xl font-serif font-bold italic mb-1">The <span className="text-[#D4AF37]">Gallery</span></h2>
+                                    <p className="text-gray-600 text-[8px] uppercase tracking-widest">Heritage & Contemporary Indian Weddings</p>
                                 </div>
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="text-center md:text-left">
-                                        <h3 className="text-3xl font-serif font-bold text-white mb-4">{servicesContent[serviceCategory].title} <span className="text-[#D4AF37] italic">Expertise</span></h3>
-                                        <p className="text-gray-400 text-sm mb-6 leading-relaxed">{servicesContent[serviceCategory].desc}</p>
+
+                                {/* Smaller Gallery Scroll */}
+                                <div className="overflow-hidden mb-8">
+                                    <div className="scroll-track">
+                                        {[...photos, ...photos].map((src, i) => (
+                                            <div key={i} className="scroll-item">
+                                                <img src={src} alt="Heritage Gallery" className="shadow-lg" loading="lazy" />
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="glass-card p-6 rounded-3xl grid grid-cols-2 gap-4">
-                                        {servicesContent[serviceCategory].items.map(item => <div key={item} className="text-[10px] font-bold text-gray-500 flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full"></div>{item}</div>)}
+                                </div>
+
+                                {/* Service Toggle Bar */}
+                                <div className="px-6 md:px-12 max-w-2xl mx-auto mb-8">
+                                    <div className="service-toggle">
+                                        {['video', 'photo', 'ai'].map(type => (
+                                            <button 
+                                                key={type} 
+                                                onClick={() => setServiceType(type)}
+                                                className={`toggle-btn ${serviceType === type ? 'active' : ''}`}
+                                            >
+                                                {type}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Dynamic Service Content */}
+                                <div className="px-6 md:px-12 max-w-4xl mx-auto">
+                                    <div className="glass-card p-8 rounded-[2rem] border-white/5 animate-in fade-in zoom-in duration-300">
+                                        <div className="flex flex-col md:flex-row gap-8">
+                                            <div className="md:w-1/2">
+                                                <div className="text-[#D4AF37] mb-4">
+                                                    <Icon name={serviceType === 'video' ? 'video' : serviceType === 'photo' ? 'camera' : 'cpu'} size={32}/>
+                                                </div>
+                                                <h3 className="text-2xl font-serif font-bold italic text-white mb-4 uppercase">{serviceType} Core</h3>
+                                                <p className="text-xs text-gray-500 leading-relaxed mb-6">{serviceDetails[serviceType].desc}</p>
+                                            </div>
+                                            <div className="md:w-1/2 bg-white/5 rounded-2xl p-6">
+                                                <h4 className="text-[9px] font-black text-white uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Service Stack</h4>
+                                                <div className="grid grid-cols-1 gap-2">
+                                                    {serviceDetails[serviceType].items.map((item, i) => (
+                                                        <div key={i} className="flex items-center gap-3 text-[10px] text-gray-400">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
+                                                            {item}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         )}
 
                         {activeTab === 'pricing' && (
-                            <div className="fade-in w-full py-10">
-                                <div className="flex bg-[#161616] p-1 rounded-xl mb-6 max-w-xs mx-auto">
-                                    {['video','photo','ai'].map(c => <button key={c} onClick={()=>setPricingCategory(c)} className={`flex-grow py-2 rounded-lg text-[9px] font-black uppercase ${pricingCategory===c?'bg-[#800000] text-white':'text-gray-500'}`}>{c}</button>)}
+                            <div className="fade-in p-6 md:p-12 overflow-y-auto h-full">
+                                <div className="text-center mb-8">
+                                    <h2 className="text-2xl md:text-4xl font-serif font-bold italic mb-1">Partner <span className="text-[#D4AF37]">Packages</span></h2>
+                                    <p className="text-[8px] text-gray-600 uppercase tracking-widest font-black">All Monthly Plans Capped at 10 Events</p>
                                 </div>
-                                <div ref={carouselRef} className="carousel-container">
-                                    {pricingData[pricingCategory].map((p, i) => (
-                                        <div key={i} className="carousel-item">
-                                            <div className={`p-8 rounded-[2rem] border h-full flex flex-col ${p.popular?'bg-[#111] border-[#D4AF37]/40 shadow-xl':'bg-white/5 border-white/5'}`}>
-                                                <span className="text-[8px] font-black text-[#D4AF37] uppercase tracking-widest">{p.name}</span>
-                                                <div className="text-4xl font-black text-white my-4">₹{p.price}</div>
-                                                <div className="flex-grow space-y-3 mb-8">
-                                                    {p.features.map(f => <div key={f} className="text-[10px] text-gray-400 flex items-center gap-2"><Icon name="check" size={12} className="text-[#800000] shrink-0"/>{f}</div>)}
-                                                </div>
-                                                <button onClick={() => {setFormData({...formData, directPackage: p.name}); setActiveTab('contact');}} className="w-full py-4 rounded-xl bg-white/10 text-[9px] font-black uppercase tracking-widest hover:bg-[#800000]">Select</button>
+
+                                <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+                                    {/* Video Partner */}
+                                    <div className="glass-card p-6 rounded-[2rem] flex flex-col border-[#D4AF37]/10">
+                                        <div className="text-[8px] font-black text-[#D4AF37] uppercase mb-1">Professional Choice</div>
+                                        <h3 className="text-lg font-bold text-white mb-1">Video Editing Partner</h3>
+                                        <div className="text-2xl font-black text-white mb-4">₹30,000<span className="text-[10px] text-gray-500 font-normal"> /mo</span></div>
+                                        
+                                        <div className="bg-white/5 p-3 rounded-lg mb-4">
+                                            <div className="text-[8px] font-bold text-gray-400 uppercase mb-2">Per Event (Limit: 10/Mo)</div>
+                                            <div className="space-y-1.5">
+                                                {['Reels x 2','Highlights x 1','Full Documentary x 1','Color Correction','Revisions x 2','Pendrive Files'].map(f => (
+                                                    <div key={f} className="text-[9px] text-gray-300 flex items-center gap-2"><Icon name="check" size={10} className="text-[#D4AF37]"/>{f}</div>
+                                                ))}
                                             </div>
                                         </div>
-                                    ))}
+                                        <p className="text-[8px] text-gray-600 mb-4">*Print deliverables not included</p>
+                                        <button onClick={()=>{setActiveTab('contact'); setContactMode('partner');}} className="mt-auto w-full py-3 rounded-lg bg-[#800000] text-white text-[9px] font-black uppercase tracking-widest">Select Plan</button>
+                                    </div>
+
+                                    {/* Video + Photo Partner */}
+                                    <div className="glass-card p-6 rounded-[2rem] flex flex-col border-white/10 bg-white/5 relative shadow-xl">
+                                        <div className="absolute top-4 right-4 text-[#D4AF37]"><Icon name="star" size={14}/></div>
+                                        <div className="text-[8px] font-black text-[#800000] uppercase mb-1">Full Studio Sync</div>
+                                        <h3 className="text-lg font-bold text-white mb-1">Video + Photo Partner</h3>
+                                        <div className="text-2xl font-black text-[#D4AF37] mb-4">₹45,000<span className="text-[10px] text-gray-500 font-normal"> /mo</span></div>
+                                        
+                                        <div className="bg-white/5 p-3 rounded-lg mb-4">
+                                            <div className="text-[8px] font-bold text-gray-400 uppercase mb-2">Per Event (Limit: 10/Mo)</div>
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                                                {['Everything in Video','Photo Editing','Mid Frames x 2','Album Layout','Grading','Retouch','Revisions x 2','Pendrive'].map(f => (
+                                                    <div key={f} className="text-[9px] text-gray-300 flex items-center gap-1.5"><Icon name="plus" size={10} className="text-[#800000]"/>{f}</div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="text-[8px] text-gray-600 mb-4">*Physical printing charged separately</p>
+                                        <button onClick={()=>{setActiveTab('contact'); setContactMode('partner');}} className="mt-auto w-full py-3 rounded-lg bg-white text-black text-[9px] font-black uppercase tracking-widest">Select Plan</button>
+                                    </div>
+
+                                    {/* Basic Print Combo */}
+                                    <div className="glass-card p-6 rounded-[2rem] flex flex-col border-white/5">
+                                        <div className="text-[8px] font-black text-gray-500 uppercase mb-1">Deliverable Set</div>
+                                        <h3 className="text-lg font-bold text-white mb-1">Basic Print Combo</h3>
+                                        <div className="text-2xl font-black text-white mb-4">₹15,000<span className="text-[10px] text-gray-500 font-normal"> /pkg</span></div>
+                                        
+                                        <div className="bg-white/5 p-3 rounded-lg mb-4">
+                                            <div className="text-[8px] font-bold text-gray-400 uppercase mb-2">Included Per Event</div>
+                                            <div className="space-y-1.5">
+                                                {['Album (60pg Custom Finish)','Frames x 2','Calendar x 1','Magazine x 1','Mug x 2'].map(f => (
+                                                    <div key={f} className="text-[9px] text-gray-300 flex items-center gap-2"><Icon name="package" size={10} className="text-gray-500"/>{f}</div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="text-[8px] text-gray-600 italic leading-tight mb-4">"Curated as per wants and specifications of services required."</p>
+                                        <button onClick={()=>{setActiveTab('contact'); setContactMode('sample');}} className="mt-auto w-full py-3 rounded-lg border border-white/10 text-white text-[9px] font-black uppercase tracking-widest hover:bg-white/5">Get Quote</button>
+                                    </div>
                                 </div>
                             </div>
                         )}
 
                         {activeTab === 'contact' && (
-                            <div className="fade-in max-w-md mx-auto w-full glass-card p-10 rounded-[2.5rem]">
-                                {step === 1 ? (
-                                    <div className="text-center">
-                                        <h2 className="text-3xl font-serif font-bold italic mb-8">Identify.</h2>
-                                        <input type="text" placeholder="STUDIO NAME" className="w-full bg-transparent border-b border-white/10 py-4 text-center text-xl outline-none focus:border-[#D4AF37] mb-8 font-serif uppercase" value={formData.studioName} onChange={e=>setFormData({...formData, studioName:e.target.value})} />
-                                        <button disabled={!formData.studioName} onClick={()=>setStep(2)} className="w-full bg-white text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">Next Step</button>
+                            <div className="fade-in p-6 md:p-12 flex items-center justify-center min-h-full">
+                                {!contactMode ? (
+                                    <div className="grid md:grid-cols-2 gap-4 max-w-2xl w-full">
+                                        <button onClick={() => setContactMode('sample')} className="glass-card p-8 rounded-3xl text-left hover:bg-white/5 transition-all group">
+                                            <Icon name="image" size={32} className="text-[#D4AF37] mb-4" />
+                                            <h3 className="text-xl font-serif font-bold italic mb-1">Samples.</h3>
+                                            <p className="text-gray-600 text-[9px] uppercase tracking-widest">Review Our Benchmark.</p>
+                                        </button>
+                                        <button onClick={() => setContactMode('partner')} className="glass-card p-8 rounded-3xl text-left hover:bg-[#800000]/10 transition-all group">
+                                            <Icon name="zap" size={32} className="text-[#800000] mb-4" />
+                                            <h3 className="text-xl font-serif font-bold italic mb-1">Enrol.</h3>
+                                            <p className="text-gray-600 text-[9px] uppercase tracking-widest">Start Onboarding.</p>
+                                        </button>
                                     </div>
                                 ) : (
-                                    <div className="text-center">
-                                        <h2 className="text-3xl font-serif font-bold italic mb-8">Connect.</h2>
-                                        <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-5 rounded-xl font-black uppercase text-[10px] flex items-center justify-center gap-3"><Icon name="send" size={16}/> Open WhatsApp</button>
-                                        <button onClick={()=>setStep(1)} className="mt-6 text-[9px] text-gray-500 uppercase tracking-widest">Back</button>
+                                    <div className="max-w-md w-full glass-card p-8 rounded-3xl relative">
+                                        <button onClick={()=>setContactMode(null)} className="absolute top-6 right-6 text-gray-600"><Icon name="x"/></button>
+                                        <h2 className="text-2xl font-serif font-bold italic mb-6">{contactMode==='sample'?'Sample Data':'Partner Data'}</h2>
+                                        <div className="space-y-3">
+                                            <input placeholder="STUDIO NAME" className="w-full bg-white/5 border border-white/5 rounded-lg px-4 py-3 text-[10px] text-white uppercase outline-none focus:border-[#D4AF37]" onChange={e=>setFormData({...formData, studioName:e.target.value})}/>
+                                            <input placeholder="WHATSAPP NO" className="w-full bg-white/5 border border-white/5 rounded-lg px-4 py-3 text-[10px] text-white uppercase outline-none focus:border-[#D4AF37]" onChange={e=>setFormData({...formData, contact:e.target.value})}/>
+                                            {contactMode === 'partner' && (
+                                                <input placeholder="LOCATION" className="w-full bg-white/5 border border-white/5 rounded-lg px-4 py-3 text-[10px] text-white uppercase outline-none focus:border-[#D4AF37]" onChange={e=>setFormData({...formData, location:e.target.value})}/>
+                                            )}
+                                            <button className="w-full bg-white text-black py-4 rounded-lg font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 mt-4" onClick={() => {
+                                                const msg = `*NEW ENQUIRY*%0A*Studio:* ${formData.studioName}%0A*Contact:* ${formData.contact}`;
+                                                window.open(`https://wa.me/919043858201?text=${msg}`);
+                                            }}>Connect via WhatsApp</button>
+                                        </div>
                                     </div>
                                 )}
                             </div>
                         )}
                     </main>
 
-                    {/* Mobile Navigation */}
                     <nav className="md:hidden mobile-nav">
                         {['home', 'layers', 'indian-rupee', 'message-circle'].map((icon, idx) => {
                             const tabs = ['home', 'services', 'pricing', 'contact'];
                             const isActive = activeTab === tabs[idx];
                             return (
-                                <button key={idx} onClick={() => {setActiveTab(tabs[idx]); setStep(1);}} className={`flex flex-col items-center gap-1 p-2 ${isActive ? 'text-[#D4AF37]' : 'text-gray-500'}`}>
-                                    <Icon name={icon} size={22} />
-                                    <span className="text-[8px] font-black uppercase tracking-tighter">{tabs[idx]}</span>
+                                <button key={idx} onClick={() => {setActiveTab(tabs[idx]); setContactMode(null);}} className={`flex flex-col items-center gap-1 p-2 ${isActive ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+                                    <Icon name={icon} size={20} />
+                                    <span className="text-[8px] font-black uppercase">{tabs[idx]}</span>
                                 </button>
                             );
                         })}
