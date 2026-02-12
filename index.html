@@ -3,7 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RENDERSPACE | Premium Post-Studio Partner</title>
+    
+    <!-- PRIMARY SEO -->
+    <title>RENDERSPACE | Premium Post-Production Partner for Wedding Studios</title>
+    <meta name="description" content="RENDERSPACE is a premium post-studio partner offering high-end video editing, cinematic storytelling, and AI-driven photo retouching for professional wedding studios. Scale your production without the overhead.">
+    <meta name="keywords" content="wedding video editing service, professional photo retouching, post production partner, wedding film editing, cinematic color grading, outsourced editing for studios">
+    <meta name="author" content="RENDERSPACE">
+    <link rel="canonical" href="https://renderspace.in" />
+
+    <!-- SOCIAL MEDIA (Open Graph) -->
+    <meta property="og:title" content="RENDERSPACE | Premium Post-Studio Partner">
+    <meta property="og:description" content="Hire an elite post-production team at the cost of a single editor. Specializing in cinematic wedding films and editorial-grade retouching.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://renderspace.in">
+    <meta property="og:image" content="https://renderspace.in/og-image.jpg"> <!-- Replace with actual image URL -->
+
+    <!-- STRUCTURED DATA (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "RENDERSPACE",
+      "image": "https://renderspace.in/logo.png",
+      "description": "Premium post-production partner for professional wedding studios specializing in video editing and photo retouching.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "India",
+        "addressCountry": "IN"
+      },
+      "url": "https://renderspace.in",
+      "priceRange": "₹₹",
+      "offers": {
+        "@type": "Offer",
+        "description": "Monthly Post-Production Subscription"
+      }
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
@@ -33,17 +69,9 @@
             .app-container { grid-template-rows: 1fr; grid-template-columns: 260px 1fr; } 
         }
 
-        /* Background Illustration Layer */
         .illustration-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.04; /* Minimum opacity for premium look */
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; opacity: 0.04; overflow: hidden;
         }
 
         .content-area { overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; scroll-behavior: smooth; z-index: 20; }
@@ -70,9 +98,24 @@
         .service-toggle { background: rgba(255,255,255,0.03); border-radius: 99px; padding: 4px; display: flex; gap: 4px; border: 1px solid rgba(255,255,255,0.05); }
         .toggle-btn { flex: 1; padding: 8px 12px; border-radius: 99px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #666; }
         .toggle-btn.active { background: #D4AF37; color: black; box-shadow: 0 4px 12px rgba(212,175,55,0.2); }
+
+        /* SEO Fallback Content (Hidden from users, visible to crawlers) */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
     </style>
 </head>
 <body>
+    <!-- FALLBACK FOR SEARCH ENGINES -->
+    <div class="sr-only">
+        <h1>RENDERSPACE - Premium Wedding Post-Production Partner</h1>
+        <h2>Professional Video Editing and Photo Retouching for Wedding Studios</h2>
+        <p>Hire a dedicated post-production department for your photography studio. We handle 4K documentary edits, cinematic highlights, AI-powered photo culling, and editorial retouching.</p>
+        <ul>
+            <li>Wedding Video Editing Partner - ₹30,000/month</li>
+            <li>Full Studio Sync (Video + Photo) - ₹45,000/month</li>
+            <li>Album Design and Print Packages</li>
+        </ul>
+    </div>
+
     <div id="root"></div>
 
     <script type="text/babel">
@@ -85,32 +128,16 @@
 
         const IllustrationLayer = () => (
             <div className="illustration-bg">
-                {/* Arch - Top Left */}
                 <svg className="absolute -top-10 -left-10 w-64 h-64 text-white" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="1">
                     <path d="M40,180 Q40,40 100,40 Q160,40 160,180" />
                     <circle cx="40" cy="180" r="5" />
                     <circle cx="160" cy="180" r="5" />
                     <path d="M45,80 L35,70 M155,80 L165,70 M100,35 L100,45" />
                 </svg>
-                {/* Rings - Bottom Right */}
                 <svg className="absolute -bottom-10 -right-10 w-80 h-80 text-white rotate-12" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="1">
                     <circle cx="80" cy="100" r="40" />
                     <circle cx="120" cy="100" r="40" />
                     <rect x="70" y="55" width="20" height="10" transform="rotate(-15 80 60)" />
-                </svg>
-                {/* Cake - Middle Left */}
-                <svg className="absolute top-1/2 -left-20 w-48 h-48 text-white -translate-y-1/2 opacity-60" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="1">
-                    <rect x="60" y="140" width="80" height="30" rx="2" />
-                    <rect x="70" y="110" width="60" height="30" rx="2" />
-                    <rect x="80" y="80" width="40" height="30" rx="2" />
-                    <path d="M100,60 L100,80" />
-                </svg>
-                {/* Champagne - Top Right */}
-                <svg className="absolute top-20 right-0 w-56 h-56 text-white opacity-40" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="1">
-                    <path d="M80,180 L120,180 M100,180 L100,120 M70,60 L100,120 L130,60 Z" />
-                    <circle cx="95" cy="40" r="3" />
-                    <circle cx="110" cy="25" r="2" />
-                    <circle cx="100" cy="10" r="4" />
                 </svg>
             </div>
         );
@@ -164,7 +191,7 @@
             };
 
             return (
-                <>
+                <div className="flex flex-col h-full w-full">
                     <IllustrationLayer />
                     <div className="app-container">
                         {/* Desktop Side Nav */}
@@ -184,7 +211,7 @@
                         </aside>
 
                         {/* Mobile Header */}
-                        <header className="md:hidden flex items-center justify-between px-6 bg-[#080808]/80 backdrop-blur-md border-b border-white/5">
+                        <header className="md:hidden flex items-center justify-between px-6 bg-[#080808]/80 backdrop-blur-md border-b border-white/5 h-[60px]">
                             <div className="text-lg font-black text-white tracking-tighter">RENDER<span className="text-[#D4AF37]">SPACE</span></div>
                         </header>
 
@@ -239,7 +266,7 @@
                                     </div>
 
                                     <div className="px-6 md:px-12 max-w-4xl mx-auto">
-                                        <div className="glass-card p-8 rounded-[2rem] border-white/5 animate-in fade-in zoom-in duration-300">
+                                        <div className="glass-card p-8 rounded-[2rem] border-white/5">
                                             <div className="flex flex-col md:flex-row gap-8">
                                                 <div className="md:w-1/2">
                                                     <div className="text-[#D4AF37] mb-4">
@@ -371,7 +398,7 @@
                             })}
                         </nav>
                     </div>
-                </>
+                </div>
             );
         };
 
